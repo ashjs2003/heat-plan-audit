@@ -107,7 +107,7 @@ function shortName(st) { return st.in_plan ? st.class_label : st.label; }
 // ---------- left: scope + strategies grouped by who can pull the lever
 function renderScope() {
   $("scope").innerHTML = S.M.scopes.map((sc) => `<button aria-pressed="${SCOPE_RANK[sc] <= SCOPE_RANK[S.scope]}" data-scope="${sc}"
-    title="${sc === "plan" ? "Only the strategies the plan commits to" : sc === "menu" ? "Add other strategies from the shared menu and the plan's recommendations" : "Add long-term structural policies"}">${SCOPE_TEXT[sc]}</button>`).join("");
+    title="${sc === "plan" ? "Only the strategies the plan commits to" : sc === "menu" ? "Add other strategies from the shared menu and the plan's recommendations" : "Add long-term structural policies"}">${SCOPE_TEXT[sc]}${sc === "standing" ? " ⚠" : ""}</button>`).join(""); siteScopeNote();
 }
 $("scope").addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
@@ -118,7 +118,7 @@ function evMark(st) {
   if (st.causal) return `<span class="ev-causal" title="Causal evidence that it saves lives">◆</span>`;
   return `<span class="ev-none" title="No causal evidence yet">◇</span>`;
 }
-function targetsLine(st) {
+function _targetsLine(st) {
   const t = st.targets; if (!t) return "";
   const share = Object.entries(t.share).map(([h, v]) => `${pct(100 * v)} of ${h} deaths`).join(" · ");
   const reach = Math.min(100, 100 * t.coverage * mult(st.key));
@@ -145,7 +145,7 @@ function rowHtml(st) {
   const opts = `<option value="auto">Auto (best)</option>` + st.rules.map((r) => `<option value="${esc(r.rule)}" ${c.rule === r.rule ? "selected" : ""}>${esc(r.label)} · ${Math.round(r.days)} d/yr${r.plan ? " · plan" : ""}</option>`).join("");
   return `<div class="srow ${on ? "" : "off"}" data-key="${esc(k)}">
       <input type="checkbox" class="scb" ${on ? "checked" : ""} aria-label="Include ${esc(st.label)}">
-      <button class="sname" aria-expanded="${open}" title="${esc(st.label)} · ${esc(st.family)}"><span class="dot" style="background:${famColor(st.family)}"></span><span class="nm"><span class="t">${esc(shortName(st))}</span><span class="sg">${esc(shortSeg(st))}</span></span></button>
+      <button class="sname" aria-expanded="${open}" title="${esc(st.label)} · ${esc(st.family)}"><span class="dot" style="background:${famColor(st.family)}"></span><span class="nm"><span class="t">${esc(shortName(st))}</span><span class="sg">${esc(shortSeg(st))}${coldTag(st.hazard)}</span></span></button>
       <span class="marks">${changed(k) ? '<span class="mod" title="Your setting">✎</span>' : ""}${st.in_plan ? '<span class="mk-plan" title="In the plan">●</span>' : ""}${evMark(st)}</span></div>
     ${open ? `<div class="sx" data-key="${esc(k)}">
       <label>Threshold <select class="rsel" aria-label="Threshold for ${esc(st.label)}">${opts}</select><span></span></label>
@@ -250,7 +250,7 @@ function dotTip(d) {
   if (cites.length) getSrc(cites[0]).then((r) => { const el = TIP.querySelector(`.tq[data-q="${CSS.escape(cites[0])}"]`); if (el && !TIP.hidden) { el.innerHTML = quoteHtml(r); placeTip(); } });
   return `<div style="border-left:4px solid ${evColor(st)};padding-left:8px">
     <div class="th"><b>${esc(st.class_label)}</b>${evBadge(st)}</div>
-    <div class="tl"><span class="pill">${esc(who(shortSeg(st)))}</span><span class="hz">${HZ[st.hazard] || ""}</span></div>
+    <div class="tl"><span class="pill">${esc(who(shortSeg(st)))}</span><span class="hz">${HZ[st.hazard] || ""}</span>${coldTag(st.hazard)}</div>
     <div class="tm">On: ${esc(trim(plainRule(ruleLabel(d.key, d.rule))))} · ${Math.round(d.days)} days/yr</div>
     <div class="tstats"><div><b>${signed(sv.y)}</b><small>lives / yr, alone</small></div><div><b>${pct(sv.x)}</b><small>of ${costOf()}</small></div></div>
     <div class="tm">${esc(planNote)}</div>${cites.length ? `<div class="tq" data-q="${esc(cites[0])}"><span class="qs">loading the plan's words…</span></div>` : ""}
@@ -452,7 +452,7 @@ function briefRow(r) {
   const vc = Math.abs(r.dy) <= EPS ? "zero" : r.dy < 0 ? "neg" : "";
   return `<div class="brow" role="button" tabindex="0" data-key="${esc(r.measure)}"${r.from_label ? ` title="Now: ${esc(plainRule(r.from_label))}"` : ""}>
     <span class="ic ${ic}" aria-hidden="true">${glyph}</span>
-    <span><span class="bn">${esc(r.label)}</span><span class="bm"><span class="pill">${esc(who(r.group))}</span><span class="hz">${HZ[r.hazard] || ""}</span><span>${esc(trim(plainRule(what), 48))}${days}</span></span></span>
+    <span><span class="bn">${esc(r.label)}</span><span class="bm"><span class="pill">${esc(who(r.group))}</span><span class="hz">${HZ[r.hazard] || ""}</span>${coldTag(r.hazard)}<span>${esc(trim(plainRule(what), 48))}${days}</span></span></span>
     <span class="bv ${vc}">${signed(r.dy)}<br>${chip(r.cite, "")}</span></div>`;
 }
 function renderBrief() {
@@ -521,7 +521,7 @@ $("analyse-close").onclick = () => { $("analyse").hidden = true; S.analyse = nul
 function itemRow(k, rule, dy, cost, maxv) {
   const st = S.st[k];
   return `<div class="arow"><span class="dot" style="background:${famColor(st.family)}" title="${esc(st.family)}"></span>
-    <div><div class="an">${esc(shortName(st))} <span class="sg">· ${esc(shortSeg(st))}</span> ${evMark(st)} ${changed(k) ? yours() : ""}</div>
+    <div><div class="an">${esc(shortName(st))} <span class="sg">· ${esc(shortSeg(st))}</span> ${evMark(st)} ${coldTag(st.hazard)} ${changed(k) ? yours() : ""}</div>
       <div class="am">${esc(ruleLabel(k, rule))} · ${esc(st.family)} · ${esc(st.group)}</div>
       ${targetsLine(st).replace('class="tg"', 'class="am"')}${assignsLine(st).replace('class="tg"', 'class="am"')}
       ${dy != null ? `<div class="abar" style="width:${(100 * Math.abs(dy)) / maxv}%;background:${dy < 0 ? css("--critical") : famColor(st.family)}"></div>` : ""}</div>
@@ -535,14 +535,14 @@ function openAnalyse(mode, key) {
     $("analyse-title").textContent = `Best mix at ${pct(p.x_pct)} of the plan's cost`;
     const ratio = plan.y > EPS ? `${(p.y / plan.y).toFixed(1)}× the plan's ${fmt(plan.y)}` : `plan: ${fmt(plan.y)}`;
     const cards = [["Deaths averted / yr", fmt(p.y), `${ratio} ${chip(S.F.cite)} ${chip(plan.cite, "plan")}`], ["Cost", pct(p.x_pct), "of the plan's (relative tiers, not $)"],
-      ["Matches the plan at", match ? pct(match.x_pct) : "–", "of the plan's cost"], ["Heat · cold", `${fmt(p.y_heat)} · ${fmt(p.y_cold)}`, "deaths averted / yr"]];
+      ["Matches the plan at", match ? pct(match.x_pct) : "–", "of the plan's cost"], ["Heat · cold", `${fmt(p.y_heat)} · ${fmt(p.y_cold)}`, "deaths averted / yr " + coldTag("cold")]];
     const G = { Keep: [], Retime: [], Add: [] }; p.items.forEach((i) => G[i.group].push(i));
     const maxv = Math.max(0.001, ...p.items.map((i) => Math.abs(i.marginal_y)));
     const grp = (g, L, rows) => (L.length ? `<div class="agroup"><h4>${GROUP_TEXT[g]} <span>${L.length}${g !== "Drop" ? ` · ${sign(L.reduce((a, i) => a + i.marginal_y, 0))}` : ""}</span></h4>${rows}</div>` : "");
     body.innerHTML = `<div class="cards">${cards.map(([k, v, s]) => `<div class="card"><div class="ck">${k}</div><div class="cv">${v}</div><div class="cs">${s}</div></div>`).join("")}</div>
       ${["Keep", "Retime", "Add"].map((g) => grp(g, G[g], G[g].map((i) => itemRow(i.measure, i.rule, i.marginal_y, i.cost_pct, maxv)).join(""))).join("")}
       ${grp("Drop", p.drop, p.drop.map((k) => itemRow(k, S.st[k].plan_rule, null, null, maxv)).join(""))}
-      <p class="muted">Contributions are added in order and sum to the total. Moving the budget slider updates this view.</p>`;
+      ${coldBox()}<p class="muted">Contributions are added in order and sum to the total. Moving the budget slider updates this view.</p>`;
     return;
   }
   const st = S.st[key]; $("analyse-title").textContent = st.label;
@@ -566,7 +566,7 @@ function openAnalyse(mode, key) {
 }
 
 // ---------- footer, view, jurisdiction
-function renderFoot() {
+function _renderFoot() {
   const t = S.M.trust, k = t.consistency_kappa;
   $("foot").innerHTML = `<span>Costs are relative tiers, not $ · ⚠ = team assumption</span>
     <span><b>${t.quotes_verified[0]}/${t.quotes_verified[1]}</b> quotes verbatim on their page</span>
@@ -627,7 +627,7 @@ function rampAt(scale, t) {
   return scale[scale.length - 1][1];
 }
 // the map card: the gap (headline), plan → best (bar), per 100k with its colour and rank (the map's encoding), plans in force
-function mapTip(r) {
+function _mapTip(r) {
   const V = r.views[MS.view], n = r.n_docs, rk = MS.rank[r.jurisdiction_id];
   const plans = [n.own && `${n.own} own`, n.county && `${n.county} county`, n.state && `${n.state} state`].filter(Boolean).join(" · ") || "none";
   const tag = r.level === "state" ? "" : n.own ? '<span class="tag own">own plan</span>' : '<span class="tag">no plan of its own</span>';
@@ -652,7 +652,7 @@ function drawMap() {
   }
   const own = C.filter((r) => r.n_docs.own > 0), ink = css("--text-primary");
   const cen = Object.fromEntries(MS.geo.features.map((f) => { const b = centroid(f); return [f.id, [(b[0] + b[1]) / 2, (b[2] + b[3]) / 2]]; }));
-  const traces = [
+  const traces = [...soonTraces(),
     { type: "choroplethmapbox", geojson: MS.geo, locations: C.map((r) => r.jurisdiction_id), z: C.map((r) => r.views[v].gap_per100k), zmin: 0, zmax,
       colorscale: scale, marker: { line: { width: 0.4, color: css("--border") }, opacity: 0.85 }, hoverinfo: "none",
       customdata: C.map((r) => r.jurisdiction_id), showscale: false },        // the legend is the ramp in the card
@@ -702,7 +702,7 @@ async function showMap(hv) {
   if (VIEW_SHORT[hv]) MS.view = hv;
   renderMapControls(); drawMap();
 }
-async function showStudio(parts) {
+async function _showStudio(parts) {
   document.body.dataset.page = "studio"; $("mapview").hidden = true; $("studio").hidden = false; $("foot").hidden = false; $("to-map").hidden = false;
   const J = await jurisdictionsList(); const [hj, hv, hsc] = parts, hs = parts.find((p) => p.startsWith("src="));
   if (!J.some((j) => j.jurisdiction_id === hj)) { location.hash = "#map"; return; }

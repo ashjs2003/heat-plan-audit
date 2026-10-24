@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How It Works</title>
+<meta name="description" content="How every number in the heat plan audit is made, from the plan PDF to the chart, with this jurisdiction's own numbers and sources.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="how.css">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body class="how">
+<header class="top">
+  <div class="brand"><span class="logo">◆</span><span>How it works</span></div>
+  <label class="sr" for="hj">Jurisdiction</label><select id="hj"></select>
+  <a id="back" class="btn" href="index.html#map">← Back to the app</a>
+  <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode">◑</button>
+</header>
+<main id="how-main"><p class="muted">Loading…</p></main>
+<div id="drawer" class="hdrawer" hidden role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <div class="hd-card"><div class="hd-head"><h3 id="drawer-title">Source</h3><button class="icon-btn" id="drawer-x" aria-label="Close">✕</button></div>
+  <div id="drawer-body"></div></div>
+</div>
+<script src="how.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+/* "How it works": a scrolling page on the app's tokens (styles.css), light and dark */
+body.how { height: auto; min-height: 100vh; display: block; }
+body.how .top { position: sticky; top: 0; z-index: 5; }
+.how .btn { border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); border-radius: 8px; padding: 5px 11px; text-decoration: none; white-space: nowrap; }
+#how-main { max-width: 960px; margin: 0 auto; padding: 20px 16px 64px; overflow-wrap: anywhere; }
+.how h1 { font-size: 26px; line-height: 1.2; margin: 8px 0 6px; }
+.how h2 { font-size: 20px; margin: 0 0 6px; }
+.how h3 { font-size: 15px; margin: 14px 0 6px; }
+.how p, .how li { font-size: 15px; line-height: 1.55; color: var(--text-secondary); }
+.how b { color: var(--text-primary); }
+.how .lede { font-size: 16px; }
+.step { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 18px 14px; margin: 16px 0; box-shadow: var(--shadow); }
+.kick { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--series-2); font-weight: 700; }
+.formula { font-family: "Cambria Math", Cambria, Georgia, serif; font-size: 17px; color: var(--text-primary); background: var(--surface-0); border: 1px solid var(--border);
+  border-left: 4px solid var(--accent); border-radius: 8px; padding: 10px 14px; margin: 8px 0; overflow-x: auto; }
+.formula .lbl { display: block; font: 12px system-ui, sans-serif; color: var(--text-muted); margin-bottom: 2px; }
+.ex { background: var(--surface-2); border-radius: 8px; padding: 10px 14px; margin: 8px 0; }
+.ex .t { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); font-weight: 600; }
+.src-line { font-size: 12.5px; color: var(--text-muted); margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.src-line code { background: var(--calc-bg); padding: 1px 6px; border-radius: 5px; color: var(--text-secondary); font-size: 12px; }
+.chipb { border: 1px solid var(--border); background: var(--surface-1); border-radius: 999px; padding: 1px 9px; font-size: 12px; cursor: pointer; color: var(--text-primary); }
+.chipb.cited { background: var(--good-bg); } .chipb.assumed { background: var(--warning-bg); } .chipb.computed { background: var(--calc-bg); }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; margin: 1px 4px 1px 0; }
+.t-real { background: var(--good-bg); } .t-asm { background: var(--warning-bg); } .t-calc { background: var(--calc-bg); } .t-red { background: var(--critical); color: #fff; }
+.tbl { width: 100%; overflow-x: auto; }
+.how table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.how th, .how td { text-align: left; padding: 6px 8px; border-top: 1px solid var(--border); vertical-align: top; }
+.how th { font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; border-top: 0; }
+.how td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.how blockquote { margin: 6px 0 10px; padding: 8px 12px; border-left: 4px solid var(--good); background: var(--good-bg); border-radius: 6px; font-size: 14.5px; color: var(--text-primary); }
+.warn { border: 1px solid var(--warning); background: var(--warning-bg); border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-size: 14px; color: var(--text-primary); }
+.soon { border: 1px solid var(--border); border-left: 4px solid var(--text-muted); background: var(--surface-2); border-radius: 8px; padding: 10px 14px; margin: 10px 0; font-size: 14px; color: var(--text-primary); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 8px 0; }
+.tile { background: var(--surface-0); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.tile .v { font-size: 22px; font-weight: 750; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.tile .k { font-size: 12.5px; color: var(--text-muted); }
+.flow .fr { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: center; margin: 4px 0; font-size: 13.5px; color: var(--text-secondary); }
+.flow .fr .v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+.flow .bar { height: 10px; border-radius: 4px; background: var(--accent); margin-bottom: 2px; max-width: 100%; }
+.gbar { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin: 6px 0; }
+.gbar div { display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 700; min-width: 14px; }
+.legend { font-size: 12px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.curve svg { width: 100%; height: auto; display: block; }
+.chips span { display: inline-block; font-size: 12.5px; background: var(--surface-0); border: 1px solid var(--border); border-radius: 999px; padding: 2px 9px; margin: 2px 4px 2px 0; color: var(--text-secondary); }
+.netbar { position: relative; height: 34px; margin: 10px 0; border-radius: 6px; overflow: hidden; display: flex; }
+.netbar div { display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; min-width: 0; }
+.ending ul { margin: 4px 0; padding-left: 20px; }
+.hdrawer { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 20; display: flex; justify-content: flex-end; }
+.hd-card { background: var(--surface-1); width: min(520px, 100%); height: 100%; overflow-y: auto; padding: 16px; border-left: 1px solid var(--border); }
+.hd-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.hd-head h3 { margin: 0; font-size: 16px; }
+.kv { font-size: 13.5px; margin: 6px 0; color: var(--text-secondary); }
+.kv b { color: var(--text-primary); }
+@media (max-width: 520px) { .how h1 { font-size: 22px; } .step { padding: 14px 12px 10px; } .formula { font-size: 15px; } }
