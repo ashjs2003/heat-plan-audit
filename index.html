@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heat Plan Audit</title>
+<meta name="description" content="Every county's heat and cold plans (its own, its county's and its state's) against the best mix the same budget could buy; every number links to its source.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><button class="back" id="to-map" title="Back to the map" aria-label="Back to the map">← Map</button><span class="logo" aria-hidden="true">◐</span><span>Heat Plan Audit</span><span class="doc" id="doc"></span></div>
+  <label class="field"><span class="sr">Jurisdiction</span><select id="jur" aria-label="Jurisdiction"></select></label>
+  <div class="seg" id="view" role="radiogroup" aria-label="Effect view"></div>
+  <button class="icon-btn" id="theme" aria-label="Toggle dark mode" title="Toggle dark mode">◑</button>
+</header>
+
+<main class="mapview" id="mapview" hidden aria-label="Map of counties">
+  <div id="map" class="map"></div>
+  <div class="mapcard">
+    <h1>Where could the same budget save more lives?</h1>
+    <p class="mk">More lives saved a year per 100,000 residents if today's budget bought the best mix.</p>
+    <div class="ramp" aria-hidden="true"><span class="bar"></span><div class="ticks" id="ramp-ticks"></div></div>
+    <div class="maplegend"><span><span class="ol"></span> has its own plan</span><span><span class="cd"></span> city with a plan</span></div>
+    <div class="seg small" id="map-focus" role="radiogroup" aria-label="Zoom to"></div>
+    <div class="toplist" id="map-top"></div>
+    <details class="how"><summary>How to read this map</summary><p id="map-key"></p></details>
+  </div>
+</main>
+
+<main class="studio" id="studio">
+  <aside class="left" aria-label="Strategies">
+    <button class="adjust" id="adjust" aria-expanded="false" aria-controls="adjust-body"><span class="ai" aria-hidden="true">⚙</span><span class="at">Adjust strategies</span></button>
+    <div class="adjust-body" id="adjust-body">
+      <div class="scope" id="scope" role="group" aria-label="Which strategies"></div>
+      <div id="groups"></div>
+    </div>
+  </aside>
+
+  <section class="center" aria-label="Strategies by cost and lives saved">
+    <div id="chart" class="chart"></div>
+    <div class="busy" id="busy" hidden>optimizing…</div>
+    <div class="mixbar">
+      <div class="mx"><span class="mxk">Selected mix</span><b id="big">–</b><span class="mxu">lives / yr</span><span class="vs" id="vs"></span></div>
+      <div class="budget">
+        <label for="budget">Budget</label>
+        <input type="range" id="budget" min="0" max="300" step="1" value="100">
+        <output id="budget-out" for="budget">100%</output>
+      </div>
+      <button class="ghost" id="alldots" aria-pressed="false" title="Show every strategy at every threshold">All options</button>
+      <button class="primary" id="analyse-btn">Analyse →</button>
+    </div>
+  </section>
+
+  <aside class="right brief" id="brief" aria-label="What to change"></aside>
+</main>
+
+<footer class="foot" id="foot"></footer>
+
+<aside class="analyse" id="analyse" hidden aria-label="Analyse">
+  <div class="drawer-head">
+    <h3 id="analyse-title">Analyse</h3>
+    <button class="icon-btn" id="analyse-close" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" id="analyse-body"></div>
+</aside>
+
+<aside class="drawer" id="drawer" hidden aria-label="Sources">
+  <div class="drawer-head">
+    <button class="icon-btn" id="drawer-back" aria-label="Back" hidden>←</button>
+    <h3 id="drawer-title">Sources</h3>
+    <button class="icon-btn" id="drawer-close" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<script src="static_shim.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
