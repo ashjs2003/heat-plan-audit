@@ -101,10 +101,10 @@ function render() {
       <p class="muted">The curve's two terms, each centred on the MMT. Each is counted where it raises risk (above 1).</p></div>
     ${formula("share of that day's deaths caused by temperature", "AF = 1 − 1 / RR(T)")}
     ${formula("heat if T is above the MMT, cold if below", "deaths<sub>day</sub> = AF × usual deaths<sub>day</sub> &nbsp;·&nbsp; a state = the sum of its counties")}
-    ${ex(`${esc(D.name)}`, `<div class="tiles"><div class="tile"><div class="v" style="color:var(--series-2)">${f1(H.heat)}</div><div class="k">heat deaths / yr${H.heat_ci ? ` (95% CI ${f1(H.heat_ci[0])}–${f1(H.heat_ci[1])})` : ""}</div></div>
+    ${ex(`${esc(D.name)}`, `<div class="tiles"><div class="tile">${H.heat_not_estimable ? `<div class="v" style="color:var(--series-2)">–</div><div class="k">heat deaths / yr: not estimable with this curve</div>` : `<div class="v" style="color:var(--series-2)">${f1(H.heat)}</div><div class="k">heat deaths / yr${H.heat_ci ? ` (95% CI ${f1(H.heat_ci[0])}–${f1(H.heat_ci[1])})` : ""}</div>`}</div>
       <div class="tile"><div class="v" style="color:var(--series-1)">${f1(H.cold)}</div><div class="k">cold deaths / yr${H.cold_ci ? ` (95% CI ${f1(H.cold_ci[0])}–${f1(H.cold_ci[1])})` : ""} ⚠ provisional</div></div>
       <div class="tile"><div class="v">${f(H.baseline)}</div><div class="k">deaths / yr from all causes</div></div>
-      <div class="tile"><div class="v">${f(H.rr_hottest, 3)}</div><div class="k">relative risk on the hottest 1% of days (${f(H.heat_per100k, 2)} heat deaths per 100k)</div></div></div>`)}
+      <div class="tile"><div class="v">${f(H.rr_hottest, 3)}</div><div class="k">relative risk on the hottest 1% of days${H.heat_per100k != null ? ` (${f(H.heat_per100k, 2)} heat deaths per 100k)` : ": the reason heat deaths can't be estimated here"}</div></div></div>`)}
     <div class="warn">⚠ <b>${esc(H.cold_warning.split(". ")[0])}.</b> ${esc(H.cold_warning.split(". ").slice(1).join(". "))}</div>
     ${cs ? `<div class="soon"><b>Why lives saved are coming soon here.</b> ${esc(cs.text)} ${cs.e6 ? `EPA's own curves for cluster ${C.cluster} by decade: ${esc(cs.e6.value)} (${esc(cs.e6.metric)}).` : ""} ${chips(cs.cite)}
       A county shows lives saved only if its relative risk on the hottest 1% of days is at least ${D.readiness.rr_min} and heat deaths are at least ${D.readiness.per100k_min} per 100k a year.</div>` : ""}
